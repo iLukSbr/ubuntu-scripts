@@ -8,4 +8,5 @@ https://code.visualstudio.com/Download
 https://snapcraft.io/blender
 https://snapcraft.io/gimp
 https://snapcraft.io/vlc
+https://snapcraft.io/discord
 https://ubuntu.com/pro/attach?

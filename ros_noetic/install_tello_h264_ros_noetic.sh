@@ -126,11 +126,11 @@ check_error "Failed to build workspace"
 echo "Configuring .bashrc..."
 SOURCE_CMD="source $TELLO_DRIVER_DIR/devel/setup.bash"
 PYTHONPATH_CMD="export PYTHONPATH=\$PYTHONPATH:$TELLO_DRIVER_DIR/devel/lib/python3/dist-packages"
-if ! grep -Fx "$SOURCE_CMD" ~/.bashrc; then
-    echo "$SOURCE_CMD" >> ~/.bashrc
+if ! grep -Fx "$SOURCE_CMD" "$HOME/.bashrc"; then
+    echo "$SOURCE_CMD" >> "$HOME/.bashrc"
 fi
-if [ -d "$TELLO_DRIVER_DIR/devel/lib/python3/dist-packages" ] && ! grep -Fx "$PYTHONPATH_CMD" ~/.bashrc; then
-    echo "$PYTHONPATH_CMD" >> ~/.bashrc
+if [ -d "$TELLO_DRIVER_DIR/devel/lib/python3/dist-packages" ] && ! grep -Fx "$PYTHONPATH_CMD" "$HOME/.bashrc"; then
+    echo "$PYTHONPATH_CMD" >> "$HOME/.bashrc"
 fi
 source "$TELLO_DRIVER_DIR/devel/setup.bash"
 check_error "Failed to source workspace setup"

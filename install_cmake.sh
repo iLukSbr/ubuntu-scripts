@@ -2,8 +2,8 @@
 set -euo pipefail
 
 # Atualiza apt e instala ferramentas necessárias
-sudo apt update
-sudo apt install -y ca-certificates gpg wget lsb-release doxygen
+sudo apt-get update
+sudo apt-get install -y ca-certificates gpg wget lsb-release doxygen
 
 # Instala o keyring do Kitware (se ainda não estiver instalado)
 if ! test -f /usr/share/doc/kitware-archive-keyring/copyright; then
@@ -40,8 +40,8 @@ esac
 echo "deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ ${CODENAME} main" \
 	| sudo tee /etc/apt/sources.list.d/kitware.list >/dev/null
 
-sudo apt update
-sudo apt install -y kitware-archive-keyring
-sudo apt update
-sudo apt install cmake -y
+sudo apt-get update
+sudo apt-get install -y kitware-archive-keyring
+sudo apt-get update
+sudo apt-get install cmake -y
 cmake --version

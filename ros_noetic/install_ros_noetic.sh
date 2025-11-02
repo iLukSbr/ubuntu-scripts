@@ -32,20 +32,20 @@ if [ -f /etc/ros/rosdep/sources.list.d/20-default.list ]; then
 fi
 
 # Add to .bashrc
-sed -i '/source \/opt\/ros\/.*\/setup.bash/d' ~/.bashrc
-echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
+sed -i '/source \/opt\/ros\/.*\/setup.bash/d' "$HOME/.bashrc"
+echo "source /opt/ros/noetic/setup.bash" >> "$HOME/.bashrc"
 source /opt/ros/noetic/setup.bash
 
-if ! grep -q '/opt/ros/noetic/lib/python3/dist-packages' ~/.bashrc; then
-    echo 'export PYTHONPATH="$PYTHONPATH:/opt/ros/noetic/lib/python3/dist-packages"' >> ~/.bashrc
+if ! grep -q '/opt/ros/noetic/lib/python3/dist-packages' "$HOME/.bashrc"; then
+    echo 'export PYTHONPATH="$PYTHONPATH:/opt/ros/noetic/lib/python3/dist-packages"' >> "$HOME/.bashrc"
 fi
 
-if grep -q 'export LD_LIBRARY_PATH=' ~/.bashrc; then
-    if ! grep -q "/opt/ros/noetic/lib" ~/.bashrc; then
-        sed -i "s|export LD_LIBRARY_PATH=|export LD_LIBRARY_PATH=\"/opt/ros/noetic/lib:\$LD_LIBRARY_PATH\"|" ~/.bashrc
+if grep -q 'export LD_LIBRARY_PATH=' "$HOME/.bashrc"; then
+    if ! grep -q "/opt/ros/noetic/lib" "$HOME/.bashrc"; then
+        sed -i "s|export LD_LIBRARY_PATH=|export LD_LIBRARY_PATH=\"/opt/ros/noetic/lib:\$LD_LIBRARY_PATH\"|" "$HOME/.bashrc"
     fi
 else
-    echo 'export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/opt/ros/noetic/lib"' >> ~/.bashrc
+    echo 'export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/opt/ros/noetic/lib"' >> "$HOME/.bashrc"
 fi
 
 sudo apt-get install -y \

@@ -34,6 +34,7 @@ sudo apt-get install -y \
     protobuf-compiler \
     libeigen3-dev \
     libopencv-dev \
+    libopencv-contrib-dev \
     python3-catkin-tools \
     python3-rosinstall-generator \
     geographiclib-tools \
@@ -82,23 +83,23 @@ catkin build
 
 sudo usermod -a -G dialout "$USER"
 
-if ! grep -q 'sim_ws/devel/setup.bash' ~/.bashrc; then
-    echo 'source "$HOME/sim_ws/devel/setup.bash"' >> ~/.bashrc
+if ! grep -q 'sim_ws/devel/setup.bash' "$HOME/.bashrc"; then
+    echo 'source "$HOME/sim_ws/devel/setup.bash"' >> "$HOME/.bashrc"
 fi
-if ! grep -q 'PX4-Autopilot/Tools/simulation/gazebo-classic/setup_gazebo.bash' ~/.bashrc; then
-    echo 'source "$HOME/PX4-Autopilot/Tools/simulation/gazebo-classic/setup_gazebo.bash" "$HOME/PX4-Autopilot" "$HOME/PX4-Autopilot/build/px4_sitl_default"' >> ~/.bashrc
+if ! grep -q 'PX4-Autopilot/Tools/simulation/gazebo-classic/setup_gazebo.bash' "$HOME/.bashrc"; then
+    echo 'source "$HOME/PX4-Autopilot/Tools/simulation/gazebo-classic/setup_gazebo.bash" "$HOME/PX4-Autopilot" "$HOME/PX4-Autopilot/build/px4_sitl_default"' >> "$HOME/.bashrc"
 fi
-if ! grep -q 'ROS_PACKAGE_PATH=' ~/.bashrc; then
-    echo 'export ROS_PACKAGE_PATH="$ROS_PACKAGE_PATH:$HOME/PX4-Autopilot:$HOME/PX4-Autopilot/Tools/simulation/gazebo-classic/sitl_gazebo-classic"' >> ~/.bashrc
+if ! grep -q 'ROS_PACKAGE_PATH=' "$HOME/.bashrc"; then
+    echo 'export ROS_PACKAGE_PATH="$ROS_PACKAGE_PATH:$HOME/PX4-Autopilot:$HOME/PX4-Autopilot/Tools/simulation/gazebo-classic/sitl_gazebo-classic"' >> "$HOME/.bashrc"
 fi
-if ! grep -q 'GAZEBO_PLUGIN_PATH=' ~/.bashrc; then
-    echo 'export GAZEBO_PLUGIN_PATH="$GAZEBO_PLUGIN_PATH:/usr/lib/x86_64-linux-gnu/gazebo-9/plugins"' >> ~/.bashrc
+if ! grep -q 'GAZEBO_PLUGIN_PATH=' "$HOME/.bashrc"; then
+    echo 'export GAZEBO_PLUGIN_PATH="$GAZEBO_PLUGIN_PATH:/usr/lib/x86_64-linux-gnu/gazebo-9/plugins"' >> "$HOME/.bashrc"
 fi
-if ! grep -q 'PX4-Autopilot/build/px4_sitl_default/bin' ~/.bashrc; then
-    echo 'export PATH="$HOME/PX4-Autopilot/build/px4_sitl_default/bin:$PATH"' >> ~/.bashrc
+if ! grep -q 'PX4-Autopilot/build/px4_sitl_default/bin' "$HOME/.bashrc"; then
+    echo 'export PATH="$HOME/PX4-Autopilot/build/px4_sitl_default/bin:$PATH"' >> "$HOME/.bashrc"
 fi
-if ! grep -q 'build/px4_sitl_default/build_gazebo' ~/.bashrc; then
-    echo 'export PYTHONPATH="$PYTHONPATH:$HOME/PX4-Autopilot/build/px4_sitl_default/build_gazebo"' >> ~/.bashrc
+if ! grep -q 'build/px4_sitl_default/build_gazebo' "$HOME/.bashrc"; then
+    echo 'export PYTHONPATH="$PYTHONPATH:$HOME/PX4-Autopilot/build/px4_sitl_default/build_gazebo"' >> "$HOME/.bashrc"
 fi
 
 source devel/setup.bash

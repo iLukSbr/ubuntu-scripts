@@ -1,50 +1,40 @@
 #!/bin/bash
+set -euo pipefail
 
-TMP_FOLDER="$(dirname "$(realpath "$0")")/../../tmp"
-LIB_FOLDER="/usr/local/lib"
+# Temporary and install directories
+TMP_DIR="/tmp/zxing_install"
+ZXING_REPO="https://github.com/zxing-cpp/zxing-cpp.git"
+ZXING_BRANCH="v2.2.1"
+INSTALL_LIB_DIR="/usr/local/lib"
+INSTALL_INCLUDE_DIR="/usr/local/include/ZXing"
 
-# Create temporary directory
-if [ -d $TMP_FOLDER ]; then
-    sudo rm -rf $TMP_FOLDER
+# Clean up any previous temp directory
+if [ -d "$TMP_DIR" ]; then
+    rm -rf "$TMP_DIR"
 fi
-sudo mkdir -p -m 777 $TMP_FOLDER
-sudo chown -R $USER:$USER $TMP_FOLDER
-cd $TMP_FOLDER || exit
+mkdir -p "$TMP_DIR"
+cd "$TMP_DIR"
 
-# Download library
-sudo git clone --recursive --depth 1 --branch v2.2.1 https://github.com/zxing-cpp/zxing-cpp.git
+# Clone ZXing repository
+git clone --recursive --depth 1 --branch "$ZXING_BRANCH" "$ZXING_REPO"
 
-# Build and install ZXing
-cd $TMP_FOLDER/zxing-cpp || exit
-if [ -d build ]; then sudo rm -rf build; fi
-if [ -d /usr/local/include/ZXing ]; then rm -rf $LIB_FOLDER/zxing-cpp; fi
-sudo mkdir -p -m 777 $TMP_FOLDER/zxing-cpp/build
-sudo chown -R $USER:$USER $TMP_FOLDER/zxing-cpp/build
-cd $TMP_FOLDER/zxing-cpp/build || exit
-sudo cmake -S .. -B . -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$LIB_FOLDER/zxing-cpp -DBUILD_SHARED_LIBS=ON -DBUILD_WRITERS=ON -DBUILD_READERS=ON
-sudo cmake --build . -j"$(nproc)" --config Release
-sudo make -j"$(nproc)"
-sudo make install
+# Build ZXing
+cd "$TMP_DIR/zxing-cpp"
+if [ -d build ]; then rm -rf build; fi
+mkdir build
+cd build
+cmake -S .. -B . -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DBUILD_WRITERS=ON -DBUILD_READERS=ON
+cmake --build . -j"$(nproc)" --config Release
 
-# Remove temporary folder
-cd ../..
-sudo rm -rf $TMP_FOLDER
+# Install library files
+sudo cp -a libZXing* "$INSTALL_LIB_DIR/"
 
-# List available ZXing packages
-# sudo apt update
-# zxing_packages=$(apt-cache search zxing | awk '{print $1}')
+# Install headers
+sudo mkdir -p "$INSTALL_INCLUDE_DIR"
+sudo cp -a ../core/include/ZXing/* "$INSTALL_INCLUDE_DIR/"
 
-# Install found ZXing packages
-# for package in $zxing_packages; do
-#     if [[ "$package" == *"ros"* || "$package" == *"python2"* ]]; then
-#         # echo "Skipping $package (ROS or Python2 package)"
-#         continue
-#     fi
-#     echo "Attempting to install $package..."
-#     sudo apt-get install -y -qq "$package" > /dev/null || true
-#     if [ $? -ne 0 ]; then
-#         echo "Failed to install $package" >&2
-#     else
-#         echo "Successfully installed $package"
-#     fi
-# done
+# Clean up temp directory
+cd /tmp
+rm -rf "$TMP_DIR"
+
+pip3 install -U pyzxing

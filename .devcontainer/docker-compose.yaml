@@ -1,0 +1,174 @@
+name: lesc-pose-detector
+services:
+  ros_nvidia_jetson:
+    build:
+      context: ../
+      dockerfile: .devcontainer/Dockerfile-jetson-jetpack4
+    privileged: true
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,video
+      - DISPLAY=${DISPLAY}
+      - XAUTHORITY=/root/.Xauthority
+      - ROS_MASTER_URI=http://${HOSTNAME}:11311
+      - ROS_HOSTNAME=${HOSTNAME}
+    volumes:
+      - ${X11_SOCKET}:/tmp/.X11-unix:rw
+      - ${XAUTHORITY_FILE}:/root/.Xauthority:rw
+      - ../:/root/catkin_ws/src/lesc-pose-detector:rw
+    devices:
+      - /dev/nvidia0:/dev/nvidia0
+      - /dev/nvidiactl:/dev/nvidiactl
+      - /dev/nvidia-uvm:/dev/nvidia-uvm
+      - /dev/video0:/dev/video0
+    group_add:
+      - video
+    command: tail -f /dev/null
+    network_mode: host
+
+  ros_nvidia_linux:
+    build:
+      context: ../
+      dockerfile: .devcontainer/Dockerfile
+    privileged: true
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,video
+      - DISPLAY=${DISPLAY}
+      - XAUTHORITY=/root/.Xauthority
+      - ROS_MASTER_URI=http://${HOSTNAME}:11311
+      - ROS_HOSTNAME=${HOSTNAME}
+    volumes:
+      - ${X11_SOCKET}:/tmp/.X11-unix:rw
+      - ${XAUTHORITY_FILE}:/root/.Xauthority:rw
+      - ../:/root/catkin_ws/src/lesc-pose-detector:rw
+    devices:
+      - /dev/nvidia0:/dev/nvidia0
+      - /dev/nvidiactl:/dev/nvidiactl
+      - /dev/nvidia-uvm:/dev/nvidia-uvm
+      - /dev/video0:/dev/video0
+    group_add:
+      - video
+    command: tail -f /dev/null
+    network_mode: host
+
+  ros_nvidia_windows:
+    build:
+      context: ../
+      dockerfile: .devcontainer/Dockerfile
+    privileged: true
+    runtime: nvidia
+    environment:
+      - DISPLAY=docker-desktop:0
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,video
+      - ROS_MASTER_URI=http://docker-desktop:11311
+      - ROS_HOSTNAME=docker-desktop
+    devices:
+      - /dev/nvidia0:/dev/nvidia0
+      - /dev/nvidiactl:/dev/nvidiactl
+      - /dev/nvidia-uvm:/dev/nvidia-uvm
+      - /dev/dri:/dev/dri
+      - /dev/video0:/dev/video0
+    group_add:
+      - video
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ../:/root/catkin_ws/src/lesc-pose-detector:rw
+    command: tail -f /dev/null
+    network_mode: host
+
+  ros_amd_linux:
+    build:
+      context: ../
+      dockerfile: .devcontainer/Dockerfile
+    privileged: true
+    environment:
+      - DISPLAY=${DISPLAY}
+      - XAUTHORITY=/root/.Xauthority
+      - ROS_MASTER_URI=http://${HOSTNAME}:11311
+      - ROS_HOSTNAME=${HOSTNAME}
+    devices:
+      - /dev/dri:/dev/dri
+      - /dev/video0:/dev/video0
+    group_add:
+      - video
+    volumes:
+      - ${X11_SOCKET}:/tmp/.X11-unix:rw
+      - ${XAUTHORITY_FILE}:/root/.Xauthority:rw
+      - ../../:/root/catkin_ws/src/lesc-pose-detector/:rw
+    security_opt:
+      - seccomp=unconfined
+    command: tail -f /dev/null
+    network_mode: host
+
+  ros_amd_windows:
+    build:
+      context: ../
+      dockerfile: .devcontainer/Dockerfile
+    privileged: true
+    environment:
+      - DISPLAY=docker-desktop:0
+      - ROS_MASTER_URI=http://docker-desktop:11311
+      - ROS_HOSTNAME=docker-desktop
+    volumes:
+      - ../../:/root/catkin_ws/src/lesc-pose-detector:rw
+    devices:
+      - /dev/dri:/dev/dri
+      - /dev/video0:/dev/video0
+    group_add:
+      - video
+    command: tail -f /dev/null
+    network_mode: host
+
+  ros_intel_linux:
+    build:
+      context: ../
+      dockerfile: .devcontainer/Dockerfile
+    privileged: true
+    environment:
+      - DISPLAY=${DISPLAY}
+      - XAUTHORITY=/root/.Xauthority
+      - ROS_MASTER_URI=http://${HOSTNAME}:11311
+      - ROS_HOSTNAME=${HOSTNAME}
+    volumes:
+      - ${X11_SOCKET}:/tmp/.X11-unix:rw
+      - ${XAUTHORITY_FILE}:/root/.Xauthority:rw
+      - ../../:/root/catkin_ws/src/lesc-pose-detector:rw
+    devices:
+      - /dev/dri:/dev/dri
+      - /dev/video0:/dev/video0
+    group_add:
+      - video
+    command: tail -f /dev/null
+    network_mode: host
+
+  ros_intel_windows:
+    build:
+      context: ../
+      dockerfile: .devcontainer/Dockerfile
+    privileged: true
+    environment:
+      - DISPLAY=docker-desktop:0
+      - ROS_MASTER_URI=http://docker-desktop:11311
+    volumes:
+      - ../../:/root/catkin_ws/src/lesc-pose-detector:rw
+    devices:
+      - /dev/dri:/dev/dri
+      - /dev/video0:/dev/video0
+    group_add:
+      - video
+    command: tail -f /dev/null
+    network_mode: host
+
+  x_server:
+    image: x11docker/xserver
+    privileged: true
+    environment:
+      - DISPLAY=host.docker.internal:0
+    command: "/usr/bin/Xorg :0"
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    network_mode: host

@@ -1,0 +1,41 @@
+# Downloaded files
+*.deb
+*.run
+*.tar.gz
+*.tar.bz2
+*.zip
+*.rpm
+downloads/
+temp/
+cache/
+
+# Logs
+*.log
+logs/
+*.out
+*.err
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+*.swp
+*.swo
+*.vc*
+
+# Temporary files
+*.tmp
+*.bak

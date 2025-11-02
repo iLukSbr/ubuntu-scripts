@@ -9,8 +9,8 @@ fi
 
 cd $EXT_FOLDER || exit
 
-sudo apt update
-sudo apt install -y jq
+sudo apt-get update
+sudo apt-get install -y jq
 
 # Clone json as submodule
 git submodule add --branch develop https://github.com/nlohmann/json
