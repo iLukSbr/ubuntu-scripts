@@ -37,6 +37,6 @@ if ! command -v nvidia-smi &> /dev/null || ! nvidia-smi &> /dev/null; then
 fi
 
 pip3 uninstall -y torch torchvision tensorflow
-pip3 install -U nvidia-cuda-runtime onnxruntime-gpu
+pip3 install -U nvidia-cuda-runtime nvidia-mathdx onnxruntime-gpu
 pip3 install --pre torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/nightly/cu130
 pip3 install -U tensorrt --no-deps
