@@ -11,5 +11,6 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubc
 sudo apt-get update
 sudo apt-get install git git-gui gh firefox -y
 gh extension install github/gh-copilot
+echo "Go to Edit -> Options -> Fill Repos and Global fields with your GitHub username and e-mail"
 git-gui
 gh auth login

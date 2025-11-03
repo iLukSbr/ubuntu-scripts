@@ -63,6 +63,7 @@ declare -a ROS_VARS=(
     'export AMENT_PYTHON_EXECUTABLE="/usr/bin/python3"'
     'export COLCON_PYTHON_EXECUTABLE="/usr/bin/python3"'
     'export COLCON_TRACE=""'
+    'export COLCON_PREFIX_PATH=""'
     'export PYTHONPATH="/opt/ros/humble/lib/python3.10/dist-packages${PYTHONPATH:+:${PYTHONPATH}}"'
     'source /opt/ros/humble/setup.bash'
 )

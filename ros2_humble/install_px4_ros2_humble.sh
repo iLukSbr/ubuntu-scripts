@@ -26,7 +26,7 @@ sudo apt-get install -y geographiclib-tools \
     libgeographic19 \
     libgeographic-dev \
     python3-geographiclib
-sudo apt-get install gstreamer1.0-plugins-bad gstreamer1.0-libav gstreamer1.0-gl -y
+sudo apt-get install gstreamer1.0-plugins-bad gstreamer1.0-libav gstreamer1.0-gl gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer1.0-plugins-good -y
 sudo apt-get install libfuse2 -y
 sudo apt-get install libxcb-xinerama0 libxkbcommon-x11-0 libxcb-cursor-dev -y
 
@@ -63,7 +63,7 @@ if [ -d "build" ]; then
 fi
 mkdir build
 cd build
-cmake ..
+cmake .. -Wno-dev
 make clean
 make -j"$(nproc)"
 sudo make install
@@ -100,6 +100,16 @@ fi
 
 echo "QGroundControl permanently installed. To run: qgroundcontrol"
 
+# Configure QGroundControl video source
+QGC_CONFIG_DIR="$HOME/.config/QGroundControl"
+mkdir -p "$QGC_CONFIG_DIR"
+QGC_INI="$QGC_CONFIG_DIR/QGroundControl.ini"
+touch "$QGC_INI"
+if ! grep -q "\[Video\]" "$QGC_INI"; then
+    echo "[Video]" >> "$QGC_INI"
+    echo "videoSource=UDP h.264 Video Stream" >> "$QGC_INI"
+fi
+
 # Install PX4 ROS 2 messages
 mkdir -p "$HOME/px4_ws/src"
 cd "$HOME/px4_ws/src"
@@ -110,7 +120,10 @@ if [ ! -d "px4_ros_com" ]; then
     git clone -b release/1.16 https://github.com/PX4/px4_ros_com.git --recursive
 fi
 cd "$HOME/px4_ws"
-colcon build --symlink-install --packages-select px4_msgs px4_ros_com
+export AMENT_PREFIX_PATH=""
+export CMAKE_PREFIX_PATH=""
+source /opt/ros/humble/setup.bash
+colcon build --symlink-install --packages-select px4_msgs px4_ros_com --cmake-args -Wno-dev
 
 if ! grep -qF 'source $HOME/px4_ws/install/setup.bash' "$HOME/.bashrc"; then
     echo 'source $HOME/px4_ws/install/setup.bash' >> "$HOME/.bashrc"
@@ -124,4 +137,7 @@ cd "$HOME/PX4-Autopilot/"
 gnome-terminal -- bash -c "ros2 launch px4_ros_com sensor_combined_listener.launch.py"
 gnome-terminal -- bash -c "MicroXRCEAgent udp4 -p 8888"
 gnome-terminal -- bash -c "qgroundcontrol"
-make px4_sitl gz_x500
+export PX4_PARAM_MAV_0_BROADCAST=1
+export PX4_SIM_LOCKSTEP=1
+export PX4_GZ_WORLD=walls
+make px4_sitl gz_x500_mono_cam
