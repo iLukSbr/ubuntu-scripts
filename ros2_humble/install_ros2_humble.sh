@@ -103,7 +103,7 @@ sudo apt-get install -y \
     libfreetype6-dev libgtest-dev libpng-dev libssl-dev lsb-release make ninja-build openjdk-11-jdk \
     openjdk-11-jre libvecmath-java openssh-client pkg-config python3-dev python3-pip rsync shellcheck \
     tzdata unzip valgrind wget xsltproc zip gedit bash-completion command-not-found libgtest-dev \
-    astyle jq libopencv-dev libopencv-contrib-dev
+    astyle jq libopencv-dev libopencv-contrib-dev doxygen python3-rosdoc2 python3-sphinx python3-sphinx-rtd-theme python3-breathe python3-exhale
 
 # Install additional Python packages
 python3 -m pip install --upgrade pip wheel setuptools
