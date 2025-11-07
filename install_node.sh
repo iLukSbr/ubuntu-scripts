@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Descarregar e instalar a nvm:
+# Download and install nvm:
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
 
-# Em vez de reiniciar a concha ou shell
+# Instead of restarting the shell
 \. "$HOME/.nvm/nvm.sh"
 
-# Descarregar e instalar a Node.js:
+# Download and install Node.js:
 nvm install 24
 
-# Consultar a versão da Node.js:
-node -v # Deveria imprimir "v24.11.0".
-nvm current # Deveria imprimir "v24.11.0".
+# Check the Node.js version:
+node -v
+nvm current
 
 # Verify the Node.js version:
-node -v # Should print "v24.11.0".
+node -v
 
-# Consultar a versão da npm:
-npm -v # Deveria imprimir "11.6.1".
+# Check the npm version:
+npm -v
 npm install -g cline

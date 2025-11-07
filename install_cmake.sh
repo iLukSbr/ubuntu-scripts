@@ -1,44 +1,44 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Atualiza apt e instala ferramentas necessárias
+# Update apt and install required tools
 sudo apt-get update
 sudo apt-get install -y ca-certificates gpg wget lsb-release doxygen
 
-# Instala o keyring do Kitware (se ainda não estiver instalado)
+# Install the Kitware keyring (if not already installed)
 if ! test -f /usr/share/doc/kitware-archive-keyring/copyright; then
-	wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \
-		| gpg --dearmor - \
-		| sudo tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null
+    wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \
+        | gpg --dearmor - \
+        | sudo tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null
 fi
 
-# Detecta o codename da distribuição (ex: noble, jammy, focal)
+# Detect distribution codename (e.g., noble, jammy, focal)
 CODENAME=""
 if [ -r /etc/os-release ]; then
-	. /etc/os-release
-	CODENAME=${VERSION_CODENAME:-}
+    . /etc/os-release
+    CODENAME=${VERSION_CODENAME:-}
 fi
 
 if [ -z "$CODENAME" ]; then
-	CODENAME=$(lsb_release -sc 2>/dev/null || true)
+    CODENAME=$(lsb_release -sc 2>/dev/null || true)
 fi
 
 case "${CODENAME}" in
-	noble|jammy|focal)
-		echo "Detected Ubuntu codename: ${CODENAME}"
-		;;
-	"")
-		echo "Não foi possível detectar o codename do Ubuntu. Saindo." >&2
-		exit 1
-		;;
-	*)
-		echo "Aviso: codename detectado '${CODENAME}' não é um dos testados (noble/jammy/focal). Tentando adicionar o repositório para esse codename." >&2
-		;;
+    noble|jammy|focal)
+        echo "Detected Ubuntu codename: ${CODENAME}"
+        ;;
+    "")
+        echo "Não foi possível detectar o codename do Ubuntu. Saindo." >&2
+        exit 1
+        ;;
+    *)
+        echo "Aviso: codename detectado '${CODENAME}' não é um dos testados (noble/jammy/focal). Tentando adicionar o repositório para esse codename." >&2
+        ;;
 esac
 
-# Adiciona o repositório Kitware correspondente e atualiza os pacotes
+# Add the corresponding Kitware repository and update packages
 echo "deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ ${CODENAME} main" \
-	| sudo tee /etc/apt/sources.list.d/kitware.list >/dev/null
+    | sudo tee /etc/apt/sources.list.d/kitware.list >/dev/null
 
 sudo apt-get update
 sudo apt-get install -y kitware-archive-keyring
