@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -eo pipefail
 
 locale  # check for UTF-8
 
@@ -55,15 +55,10 @@ sudo apt-get install -y ros-dev-tools \
     ros-humble-sros2-cmake ros-humble-std-srvs ros-humble-stereo-image-proc ros-humble-stereo-msgs ros-humble-teleop-twist-joy ros-humble-teleop-twist-keyboard ros-humble-tf2-bullet ros-humble-tf2-eigen ros-humble-tf2-eigen-kdl ros-humble-tf2-kdl ros-humble-tf2-sensor-msgs ros-humble-tf2-tools \
     ros-humble-tlsf ros-humble-tlsf-cpp ros-humble-topic-monitor ros-humble-tracetools-image-pipeline ros-humble-turtlesim ros-humble-uncrustify-vendor ros-humble-vision-opencv ros-humble-zstd-vendor tcl-dev tcl8.6-dev tk-dev tk8.6-dev uncrustify vtk9 \
     mingw-w64 libgflags-dev libgflags2.2 ros-humble-actuator-msgs ros-humble-sdformat-urdf ros-humble-vision-msgs ros-humble-xacro \
-    ros-humble-desktop ros-humble-perception ros-humble-ros-workspace
+    ros-humble-desktop ros-humble-perception ros-humble-ros-workspace vim
 
 # Add ROS Humble setup to bashrc if not already present
 declare -a ROS_VARS=(
-    'export AMENT_TRACE_SETUP_FILES=""'
-    'export AMENT_PYTHON_EXECUTABLE="/usr/bin/python3"'
-    'export COLCON_PYTHON_EXECUTABLE="/usr/bin/python3"'
-    'export COLCON_TRACE=""'
-    'export COLCON_PREFIX_PATH=""'
     'export PYTHONPATH="/opt/ros/humble/lib/python3.10/dist-packages${PYTHONPATH:+:${PYTHONPATH}}"'
     'source /opt/ros/humble/setup.bash'
 )
@@ -82,7 +77,7 @@ else
     echo "ROS Humble setup already in $HOME/.bashrc"
 fi
 
-# Install Gazebo Harmonic (replacing Garden for compatibility with ROS components)
+# Install Gazebo Harmonic
 sudo curl https://packages.osrfoundation.org/gazebo.gpg --output /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] https://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null
 sudo apt-get update
@@ -106,7 +101,7 @@ sudo apt-get install -y \
     astyle jq libopencv-dev libopencv-contrib-dev doxygen python3-rosdoc2 python3-sphinx python3-sphinx-rtd-theme python3-breathe python3-exhale
 
 # Install additional Python packages
-python3 -m pip install --upgrade pip wheel setuptools
+python3 -m pip install --upgrade pip
 pip3 install -U \
     argcomplete \
     flake8 \
@@ -120,51 +115,4 @@ pip3 install -U \
     flake8-quotes \
     pytest-repeat \
     pytest-rerunfailures \
-    argparse argcomplete coverage cerberus empy jinja2 kconfiglib matplotlib numpy nunavut packaging pkgconfig pyros-genmsg pyulog pyyaml requests serial six toml psutil pyulog wheel jsonschema pynacl
-
-# Configure colcon mixins and metadata
-colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
-colcon mixin update
-colcon metadata add default https://raw.githubusercontent.com/colcon/colcon-metadata-repository/master/index.yaml
-colcon metadata update
-
-# Setup ccache
-sudo ln -sf /usr/bin/ccache /usr/lib/ccache/cc
-sudo ln -sf /usr/bin/ccache /usr/lib/ccache/c++
-
-# Install JSBSim
-wget https://github.com/JSBSim-Team/jsbsim/releases/download/v1.2.3/JSBSim-devel_1.2.3-1561.jammy.amd64.deb -O /tmp/jsbsim.deb
-sudo dpkg -i /tmp/jsbsim.deb
-rm /tmp/jsbsim.deb
-
-# Add ccache PATH to $HOME/.bashrc
-CCACHE_PATH_LINE='export PATH="/usr/lib/ccache:$PATH"'
-if ! grep -qF "$CCACHE_PATH_LINE" "$HOME/.bashrc"; then
-    echo "$CCACHE_PATH_LINE" >> "$HOME/.bashrc"
-    echo "ccache PATH added to $HOME/.bashrc"
-else
-    echo "ccache PATH already in $HOME/.bashrc"
-fi
-
-# Add environment variables to $HOME/.bashrc (checking individually)
-declare -a ENV_VARS=(
-    "export QT_X11_NO_MITSHM=1"
-    "export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8"
-    "export CCACHE_UMASK=000"
-    "export TERM=xterm"
-    "export TZ=UTC"
-)
-
-ADDED=false
-for var in "${ENV_VARS[@]}"; do
-    if ! grep -qF "$var" "$HOME/.bashrc"; then
-        echo "$var" >> "$HOME/.bashrc"
-        ADDED=true
-    fi
-done
-
-if $ADDED; then
-    echo "Environment variables added to $HOME/.bashrc"
-else
-    echo "All environment variables are already in $HOME/.bashrc"
-fi
+    empy==3.3.4 pyros-genmsg setuptools==65.5.1 argparse argcomplete coverage cerberus jinja2 kconfiglib matplotlib numpy nunavut packaging pkgconfig pyulog pyyaml requests serial six toml psutil pyulog wheel jsonschema pynacl

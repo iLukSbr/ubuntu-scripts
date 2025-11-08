@@ -1,30 +1,43 @@
 {
     "python.defaultInterpreterPath": "/usr/bin/python3",
     "python.autoComplete.extraPaths": [
+        "${workspaceFolder}/..",
+        "${workspaceFolder}/../../install",
+        "${workspaceFolder}/../../build",
         "/opt/ros/humble/lib/python3.10/dist-packages",
         "/opt/ros/humble/lib/python3.10/site-packages",
         "/opt/ros/humble/local/lib/python3.10/dist-packages",
         "${env:HOME}/px4_ws",
-        "${env:HOME}/PX4-Autopilot"
+        "${env:HOME}/PX4-Autopilot",
+        "${env:HOME}/Micro-XRCE-DDS-Agent"
     ],
     "python.analysis.extraPaths": [
+        "${workspaceFolder}/..",
+        "${workspaceFolder}/../../install",
+        "${workspaceFolder}/../../build",
         "/opt/ros/humble/lib/python3.10/dist-packages",
         "/opt/ros/humble/lib/python3.10/site-packages",
         "/opt/ros/humble/local/lib/python3.10/dist-packages",
         "${env:HOME}/px4_ws",
-        "${env:HOME}/PX4-Autopilot"
+        "${env:HOME}/PX4-Autopilot",
+        "${env:HOME}/Micro-XRCE-DDS-Agent"
     ],
     "ros.distro": "humble",
     "cmake.configureOnOpen": false,
     "C_Cpp.default.cppStandard": "c++17",
     "C_Cpp.default.cStandard": "c17",
     "files.associations": {
+        "CMakeLists.txt": "cmake",
+        "*.cmake": "cmake",
         "*.dbclient-js": "javascript",
         "*.log": "log",
         "*.txt": "log",
-        "*.msg": "plaintext",
-        "*.srv": "plaintext",
-        "*.action": "plaintext",
+        "*.msg": "ros2.interface",
+        "*.srv": "ros2.interface",
+        "*.action": "ros2.interface",
+        "*.xml": "xml",
+        "*.launch": "xml",
+        "*.launch.py": "python",
         "string_view": "cpp",
         "string": "cpp",
         "cctype": "cpp",

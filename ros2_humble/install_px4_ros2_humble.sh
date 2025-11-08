@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -eo pipefail
 
 export CMAKE_SUPPRESS_DEVELOPER_WARNINGS=ON
 export CMAKE_POLICY_DEFAULT_CMP0054=NEW
@@ -22,13 +22,13 @@ if dpkg -l libgmp10 2>/dev/null | grep -q Fips; then
     rm libgmp10_2%3a6.2.1+dfsg-3ubuntu1_amd64.deb
 fi
 
-sudo apt-get install -y geographiclib-tools \
+sudo apt-get install -y \
+    geographiclib-tools \
     libgeographic19 \
     libgeographic-dev \
-    python3-geographiclib
-sudo apt-get install gstreamer1.0-plugins-bad gstreamer1.0-libav gstreamer1.0-gl gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer1.0-plugins-good -y
-sudo apt-get install libfuse2 -y
-sudo apt-get install libxcb-xinerama0 libxkbcommon-x11-0 libxcb-cursor-dev -y
+    python3-geographiclib \
+    gstreamer1.0-plugins-bad gstreamer1.0-libav gstreamer1.0-gl gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
+    libfuse2 flightgear libxcb-xinerama0 libxkbcommon-x11-0 libxcb-cursor-dev
 
 # Download and execute official GeographicLib dataset installer in /tmp
 GEOLIB_SCRIPT="/tmp/install_geographiclib_datasets.sh"
@@ -111,28 +111,35 @@ if ! grep -q "\[Video\]" "$QGC_INI"; then
 fi
 
 # Install PX4 ROS 2 messages
-mkdir -p "$HOME/px4_ws/src"
-cd "$HOME/px4_ws/src"
+mkdir -p "$HOME/px4_ros_ws/src"
+cd "$HOME/px4_ros_ws/src"
 if [ ! -d "px4_msgs" ]; then
     git clone -b release/1.16 https://github.com/PX4/px4_msgs.git --recursive
 fi
 if [ ! -d "px4_ros_com" ]; then
     git clone -b release/1.16 https://github.com/PX4/px4_ros_com.git --recursive
 fi
-cd "$HOME/px4_ws"
-export AMENT_PREFIX_PATH=""
-export CMAKE_PREFIX_PATH=""
+cd "$HOME/px4_ros_ws"
+if [ -d "build" ]; then
+    rm -rf build
+fi
+if [ -d "install" ]; then
+    rm -rf install
+fi
+if [ -d "log" ]; then
+    rm -rf log
+fi
 source /opt/ros/humble/setup.bash
 colcon build --symlink-install --packages-select px4_msgs px4_ros_com --cmake-args -Wno-dev
 
-if ! grep -qF 'source $HOME/px4_ws/install/setup.bash' "$HOME/.bashrc"; then
-    echo 'source $HOME/px4_ws/install/setup.bash' >> "$HOME/.bashrc"
+if ! grep -qF 'source $HOME/px4_ros_ws/install/setup.bash' "$HOME/.bashrc"; then
+    echo 'source $HOME/px4_ros_ws/install/setup.bash' >> "$HOME/.bashrc"
     echo "Added PX4 ROS2 workspace to ~/.bashrc"
 else
     echo "PX4 ROS2 workspace already in ~/.bashrc"
 fi
 source /opt/ros/humble/setup.bash
-source "$HOME/px4_ws/install/setup.bash"
+source "$HOME/px4_ros_ws/install/setup.bash"
 cd "$HOME/PX4-Autopilot/"
 gnome-terminal -- bash -c "ros2 launch px4_ros_com sensor_combined_listener.launch.py"
 gnome-terminal -- bash -c "MicroXRCEAgent udp4 -p 8888"

@@ -4,11 +4,14 @@
       "name": "ROS2 Humble + PX4",
       "includePath": [
         "${workspaceFolder}/**",
+        "${workspaceFolder}/../../install/**",
+        "${workspaceFolder}/../../build/**",
         "/opt/ros/humble/include/**",
         "/usr/include/**",
         "/usr/local/include/**",
         "${env:HOME}/px4_ws/**",
-        "${env:HOME}/PX4-Autopilot/**"
+        "${env:HOME}/PX4-Autopilot/**",
+        "${env:HOME}/Micro-XRCE-DDS-Agent/**"
       ],
       "defines": [
         "ROS2"
@@ -21,11 +24,14 @@
         "databaseFilename": "${workspaceFolder}/.vscode/browse.vc.db",
         "path": [
           "${workspaceFolder}/**",
+          "${workspaceFolder}/../../install/**",
+          "${workspaceFolder}/../../build/**",
           "/opt/ros/humble/include/**",
           "/usr/include/**",
           "/usr/local/include/**",
           "${env:HOME}/px4_ws/**",
-          "${env:HOME}/PX4-Autopilot/**"
+          "${env:HOME}/PX4-Autopilot/**",
+          "${env:HOME}/Micro-XRCE-DDS-Agent/**"
         ],
         "limitSymbolsToIncludedHeaders": true
       }
